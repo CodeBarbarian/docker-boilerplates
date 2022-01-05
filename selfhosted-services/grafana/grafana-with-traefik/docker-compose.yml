@@ -1,0 +1,25 @@
+version: "3.0"
+
+volumes:
+  grafana-data:
+    driver: local
+
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.entrypoints=web, websecure"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.example.com`)"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=production"
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+networks:
+  web:
+    external: true
