@@ -2,6 +2,7 @@ version: '3.0'
 volumes:
   traefik-ssl-certs:
     driver: local
+    
 services:
   traefik:
     image: traefik:latest
