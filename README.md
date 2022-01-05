@@ -77,11 +77,7 @@ Who does not love boilerplates? This will be the project where I collect and pub
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Still needs doing
-Adding the files for
-* Homer
-* OpenVAS
-* Pi-Hole
-* Portainer
+Unsure...
 
 Maybe even try to get done with the syntax folder, adding helpful tips and tricks for future use
 
