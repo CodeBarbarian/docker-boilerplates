@@ -58,6 +58,8 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#reverse-proxy-server-with-traefik">Reverse Proxy Server with Traefik</a></li>
+        <li><a href="#adding-ssl-certificates-to-local-environment">Adding SSL certificates to local environment</a></li>
       </ul>
     </li>
     <li><a href="#license">License</a></li>
@@ -90,11 +92,59 @@ Download project, go into directory for what you would like to run and issue:
 ```bash
 docker-compose up -d
 ```
-
 ### Prerequisites
 
 * Docker
 * Docker Compose
+
+
+### Reverse Proxy Server with Traefik
+This allows you to use Traefik as your Reverse Proxy. This also adds the certificate from the certificate resolver you want. in this case production. 
+
+* Production = Lets Encrypt Production
+* Staging = Lets Encrypt Staging
+* Cloudflare = Cloudflare
+
+
+```yaml
+labels:
+  - "traefik.enable=true"
+  - "traefik.http.routers.your-router-name.entrypoints=web, websecure"
+  - "traefik.http.routers.your-router-name.rule=Host(`servicename.example.com`)"
+  - "traefik.http.routers.your-router-name.tls=true"
+  - "traefik.http.routers.your-router-name.tls.certresolver=production"
+```
+
+To get everything working it also needs to be on the same network as traefik is controlling.
+This needs to be added to the services as well, I usually put it on the bottom of the docker-compose.yml file.
+```yaml
+networks:
+  - web
+
+networks:
+  web:
+    external: true
+```
+
+### Adding SSL certificates to local environment
+Add this to the labels for the traefik container
+```yaml
+labels:
+  - "traefik.enable=true"
+  - "traefik.http.routers.traefik.entrypoints=web"
+  - "traefik.http.routers.traefik.rule=Host(`traefik-dashboard-internal.local.example.com`)"
+  - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+  - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+  - "traefik.http.routers.traefik-secure.rule=Host(`traefik-dashboard-internal.local.example.com`)"
+  - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+  - "traefik.http.routers.traefik-secure.tls=true"
+  - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+  - "traefik.http.routers.traefik-secure.tls.domains[0].main=local.example.com"
+  - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.local.example.com"
+  - "traefik.http.routers.traefik-secure.service=api@internal"
+```
+
+
 
 <!-- LICENSE -->
 ## License
