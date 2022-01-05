@@ -1,0 +1,104 @@
+lobal:
+  checkNewVersion: true
+  sendAnonymousUsage: false  # true by default
+
+# (Optional) Log information
+# ---
+#log:
+#  level: DEBUG  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+#  format: common  # common, json, logfmt
+#  filePath: /var/log/traefik/traefik.log
+
+# (Optional) Accesslog
+# ---
+#accesslog:
+#  format: common  # common, json, logfmt
+#  filePath: /var/log/traefik/access.log
+
+# (Optional) Enable API and Dashboard
+# ---
+api: 
+ dashboard: true  # true by default
+ insecure: true  # Don't do this in production!
+
+# Metrics I hope
+metrics:
+  prometheus:
+    buckets:
+    - 0.1
+    - 0.3
+    - 1.2
+    - 5.0
+    - 10
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
+    entryPoint: metrics
+    manualRouting: false
+
+# Entry Points configuration
+# ---
+entryPoints:
+  web:
+    address: :80
+    # (Optional) Redirect to HTTPS
+    # ---
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: :443
+
+  metrics:
+    address: :8082
+
+# Configure your CertificateResolver here...
+# ---
+certificatesResolvers:
+  staging:
+    acme:
+      email: mail@example.com
+      storage: /etc/traefik/certs/acme.json
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+#
+  production:
+    acme:
+      email: mail@example.com
+      storage: /etc/traefik/certs/acme.json
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+
+  cloudflare:
+    acme:
+      email: mail@example.com
+      storage: /etc/traefik/certs/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
+
+serversTransport:
+  insecureSkipVerify: true
+
+# (Optional) Overwrite Default Certificates
+# tls:
+#   stores:
+#     default:
+#       defaultCertificate:
+#         certFile: /etc/traefik/certs/cert.pem
+#         keyFile: /etc/traefik/certs/cert-key.pem
+
+providers:
+  docker:
+    exposedByDefault: false  # Default is true
+  file:
+    # watch for dynamic configuration changes
+    directory: /etc/traefik
+    watch: true
