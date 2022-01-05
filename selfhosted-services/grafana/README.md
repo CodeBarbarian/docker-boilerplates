@@ -1,7 +1,7 @@
 # Grafana
 Grafana is a multi-platform open source analytics and interactive visualization web application. It provides charts, graphs, and alerts for the web when connected to supported data sources.
 
-# How to use
+## How to run
 
 ```bash
 docker-compose up -d

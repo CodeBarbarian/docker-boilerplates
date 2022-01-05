@@ -1,0 +1,19 @@
+version: "3.0"
+
+services:
+  pihole:
+    image: pihole/pihole:latest
+    restart: always
+    container_name: pihole-internal
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 8081:80/tcp
+    environment:
+      - TZ=Europe/Oslo
+      - DNS1=1.1.1.1
+      - DNS2=8.8.8.8
+    volumes:
+      - ./data/pihole:/etc/pihole
+      - /etc/etc-dnsmasq.d:/etc/dnsmasq.d

@@ -9,3 +9,8 @@ The file acme.json in data directory needs to have the following permission sche
 $ chmod 600 acme.json
 ```
 
+## How to run
+
+```bash
+docker-compose up -d
+```
