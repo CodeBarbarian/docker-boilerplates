@@ -1,0 +1,16 @@
+version: "3.0"
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Oslo
+    volumes:
+      - ./config:/config
+      - ./data/tv:/tv-shows
+
+    

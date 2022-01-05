@@ -1,4 +1,5 @@
 version: '3.0'
+
 volumes:
   traefik-ssl-certs:
     driver: local

@@ -11,15 +11,3 @@ services:
     volumes:
       - ./data/config:/config
       - ./data/movies:/movies
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.entrypoints=web, websecure"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.example.com`)"
-      - "traefik.http.routers.radarr.tls=true"
-      - "traefik.http.routers.radarr.tls.certresolver=production"
-    networks:
-      - web
-
-networks:
-  web:
-    external: true
